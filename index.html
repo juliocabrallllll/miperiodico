@@ -10,6 +10,19 @@
 </head>
 
 <body>
+<div id="auth-box" class="login-box">
+
+  <h2 id="title">Iniciar sesión</h2>
+
+  <input type="text" id="user" placeholder="Usuario">
+  <input type="password" id="pass" placeholder="Contraseña">
+
+  <button onclick="login()">Entrar</button>
+  <button onclick="register()">Registrarse</button>
+
+  <p id="msg" style="color:red;"></p>
+
+</div>
 
 <header>
 
@@ -262,6 +275,47 @@ const navLinks = document.getElementById('nav-links');
 hamburger.addEventListener('click', () => {
   navLinks.classList.toggle('active');
 });
+</script>
+<script>
+let users = JSON.parse(localStorage.getItem("users")) || [];
+
+function register() {
+  const user = document.getElementById("user").value;
+  const pass = document.getElementById("pass").value;
+
+  if (!user || !pass) {
+    document.getElementById("msg").textContent = "Completa los campos";
+    return;
+  }
+
+  // revisar si ya existe
+  const exists = users.find(u => u.user === user);
+
+  if (exists) {
+    document.getElementById("msg").textContent = "Usuario ya existe";
+    return;
+  }
+
+  users.push({ user, pass });
+  localStorage.setItem("users", JSON.stringify(users));
+
+  document.getElementById("msg").style.color = "green";
+  document.getElementById("msg").textContent = "Usuario registrado ✔";
+}
+
+function login() {
+  const user = document.getElementById("user").value;
+  const pass = document.getElementById("pass").value;
+
+  const found = users.find(u => u.user === user && u.pass === pass);
+
+  if (found) {
+    document.getElementById("auth-box").style.display = "none";
+  } else {
+    document.getElementById("msg").style.color = "red";
+    document.getElementById("msg").textContent = "Datos incorrectos";
+  }
+}
 </script>
 
 </body>
